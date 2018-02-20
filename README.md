@@ -1,7 +1,4 @@
-# Project Title
-
-LoPro-Bounce Demo 
-
+# LoPro-Bounce Demo 
 
 ## Description
 
