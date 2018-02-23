@@ -1,3 +1,11 @@
+/*
+---------Changelog---------
+02/23/18:
+    -RED LED broke, LED Drivers no longer respond to PWM pulses. Amber LED is now in place of RED LED
+    -Crash detection changed from absolute value to tap interrupt for better performance.
+    -LED now flashes instead of pulsing
+*/
+
 
 #include <SPI.h> 
 #include <Wire.h>
@@ -18,7 +26,10 @@ extern "C"
 #define M_DIR 11
 #define M_EN A4
 #define M_VELO 10  //9is linked to LED
-#define LED_RED 9
+#define LED_RED 8 //Yellow LED at 8
+
+//Crash Detection Threshold
+#define crash_threshold 50
 
 #define PWM_percent(val)  (255*val/100)
 //Accelerometer
@@ -88,22 +99,36 @@ void accelerometer_initialize()
 
   accelerometer.powerOn();                     // Power on the accelerometer345
   accelerometer.setRangeSetting(2);           // Give the range settings "2" for +/-2G range
+  accelerometer.setTapDetectionOnXYZ(1,1,0);
+  accelerometer.setTapThreshold(75);
+  accelerometer.setTapDuration(15);
+  accelerometer.setDoubleTapWindow(50);
+
+  accelerometer.singleTapINT(1); 
 
 }
 
 
 bool crash_detection(int acc_threshold)
 {
-    int x,y,z;
+    byte interrupts = accelerometer.getInterruptSource();
 
-    accelerometer.readAccel(&x, &y, &z);
-
-    if (x>=acc_threshold || y>=acc_threshold || z>=acc_threshold)
+    if(accelerometer.triggered(interrupts, ADXL345_SINGLE_TAP))
     {
         return true;
     }
-
+    
     return false;
+
+/*     int x,y,z;
+
+    accelerometer.readAccel(&x, &y, &z);
+
+    if (x>=acc_threshold || y>=acc_threshold)
+    {
+        return true;
+    }
+ */
 
 }
 
@@ -113,7 +138,8 @@ void crash_error()
     while (true)
     {
         //TODO blink RED LED
-        Pulse_led(LED_RED,50);
+        //Pulse_led(LED_RED,100);
+        Flash_led(LED_RED);
     }
 
 }
@@ -123,15 +149,24 @@ void Pulse_led(int LED_pin, int max_brightness)
 {
 for (int brightness = 0; brightness < max_brightness; brightness++) {
       analogWrite(LED_pin, brightness);
-      delay(50);
+      delay(30);
     }
     delay(10);
     // fade the LED on thisPin from brightest to off:
     for (int brightness = max_brightness; brightness >= 0; brightness--) {
       analogWrite(LED_pin, brightness);
-      delay(2);
+      delay(50);
     }
 
+}
+
+
+void Flash_led(int LED_pin)
+{
+    digitalWrite(LED_pin,HIGH);
+    delay(200);
+    digitalWrite(LED_pin,LOW);
+    delay(200);
 }
 
 void setup()
@@ -157,7 +192,7 @@ void setup()
 void loop()
 {
     
-    if (crash_detection(350))
+    if (crash_detection(crash_threshold))
     {
         digitalWrite(M_EN,LOW); //Motor is turned off
         crash_error();
