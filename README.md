@@ -9,10 +9,8 @@ LoPro carriage bounces back and forth using the onboard sensors as floating limi
 
 ### Sensors Used
 
-4x Short-range laser distance sensors
-1x MEMS Accelerometer
-
-
+4x Short-range laser distance sensors<br/>
+1x MEMS Accelerometer<br/>
 
 
 ## Getting Started
@@ -27,15 +25,14 @@ Sparkfun VL6180X Library
 Sparkfun ADXL345 Library
 ```
 
-
 ### Hardware Prerequisites
 
--BWC_Duino
--Laser Sensor Blocks
--Size 2 LoPro
--Stepper Motor with Velocity Oscillator Mode
--12 -70 V Power Supply
--5 V Power Supply
+-BWC_Duino<br/>
+-Laser Sensor Blocks<br/>
+-Size 2 LoPro<br/>
+-Stepper Motor with Velocity Oscillator Mode<br/>
+-12 -70 V Power Supply<br/>
+-5 V Power Supply<br/>
 
 
 ## Versioning
