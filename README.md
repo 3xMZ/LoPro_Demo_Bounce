@@ -29,7 +29,7 @@ Sparkfun ADXL345 Library
 
 -BWC_Duino<br/>
 -Laser Sensor Blocks<br/>
--Size 2 LoPro<br/>
+-Size 1 LoPro<br/>
 -Stepper Motor with Velocity Oscillator Mode<br/>
 -12 -70 V Power Supply<br/>
 -5 V Power Supply<br/>
